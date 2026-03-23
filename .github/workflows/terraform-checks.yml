@@ -1,0 +1,41 @@
+name: Terraform Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Format and Validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "~> 1.6"
+
+      - name: Check formatting in 01-networking
+        run: terraform fmt -check -recursive
+        working-directory: 01-networking
+
+      - name: Check formatting in 02-eks-cluster
+        run: terraform fmt -check -recursive
+        working-directory: 02-eks-cluster
+
+      - name: Validate 01-networking
+        run: |
+          terraform init -backend=false
+          terraform validate
+        working-directory: 01-networking
+
+      - name: Validate 02-eks-cluster
+        run: |
+          terraform init -backend=false
+          terraform validate
+        working-directory: 02-eks-cluster
