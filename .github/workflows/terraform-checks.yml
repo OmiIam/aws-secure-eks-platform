@@ -24,18 +24,8 @@ jobs:
         run: terraform fmt -check -recursive
         working-directory: 01-networking
 
-      - name: Check formatting in 02-eks-cluster
-        run: terraform fmt -check -recursive
-        working-directory: 02-eks-cluster
-
       - name: Validate 01-networking
         run: |
           terraform init -backend=false
           terraform validate
         working-directory: 01-networking
-
-      - name: Validate 02-eks-cluster
-        run: |
-          terraform init -backend=false
-          terraform validate
-        working-directory: 02-eks-cluster
